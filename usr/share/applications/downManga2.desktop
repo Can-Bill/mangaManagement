@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+ 
+[Desktop Entry]
+Version=1.1.1
+Encoding=UTF-8
+Name=DownManga2
+GenericName=DownManga2
+Comment=Téléchargeur de manga
+Exec=downManga2
+Icon=/opt/mangaManagement/icons/downManga2.png
+Terminal=True
+Type=Application
+Categories=Application;Network;
+Name[fr_FR]=DownManga2

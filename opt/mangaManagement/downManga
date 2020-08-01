@@ -1,0 +1,59 @@
+#!/bin/python3
+import urllib3, os, pathlib, mangaManagement.variables as variables
+connection_pool = urllib3.PoolManager()
+from mangaManagement.management import *
+from mangaManagement.download import *
+
+os.system("clear")
+
+#Definitions de quelques variables
+extensions, langs, scansPath, imagesType = [".jpg", ".png"], ["", "raw", "va", "vf", "VF", "vus", "VUS"], str(variables.homePath)+"/Documents/Divertissements/scan/", "Jpg"
+mangaList = getMangaList([variables.binPath+".mangadown/downManga/scan_down.md"], scansPath, imagesType)  #On récupère le liste des mangas et leurs infos
+mangaNum = getMangaNum(mangaList)  #On récupère le numéro du manga à télécharger
+Name, url, scanPath = mangaList[mangaNum]  #Definition de variable après lecture des informations
+suf = getDic(variables.binPath+".mangadown/downManga/Love_X_Dilemma.md")
+
+#Récupération de la version du manga à télécharger
+if (len(langs) > 1):
+    lang = getVersion(langs)
+else:
+    lang = langs[0]
+
+#Paramètrages suplémentaires
+nbreNombre = getNbreImage(
+    "Le nom des images contient combien de nombre au minimum?:"
+)  #Le nombre de nombre mininum dans le numéro des images
+
+#Gestion des erreurs de dossier:
+creatDir(scansPath + Name)
+creatDir(scansPath + Name + "/" + imagesType)
+
+#Traitement des données et lancement des téléchargements:
+for chapitre, more in getChapterVars(Name):
+    #Gestion du dossier de chapitre:
+    creatDir(scanPath + more + chapitre + lang)
+
+    #Gestion du téléchargement des images:
+    for extension in extensions:  #On utilise les différentes extensions
+        i = 1
+        while (True):
+            nbreZero, image = nbreNombre - len(str(i)), ""
+            for j in range(0, nbreZero):
+                image += "0"
+            image = image + str(i)
+
+            imageUrl = url + chapitre + lang + "/" + image + extension  #On crée l'url de téléchargement de l'image
+
+            if (len(image) < 2):
+                image = "0" + image
+            imagePath = scanPath + more + chapitre + lang + "/Chap" + chapitre + "_" + image + extension  #On crée le chemin de sauvegarde de l'image
+
+            # os.system("wget "+imageUrl)
+
+            if (downloadImage(imageUrl, imagePath) == False):
+                if (i > 20):
+                    break
+            i += 1
+
+            # if i > 300:
+            #     break

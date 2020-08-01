@@ -1,0 +1,32 @@
+#!/bin/python3
+import urllib3, os, pathlib, mangaManagement.management as management, mangaManagement.download as download, mangaManagement.variables as variables
+
+# Definitions de quelques variables
+mdFilesList, imagesType = management.getPathTreeList([variables.binPath+"/.mangadown/downManga2/"], [".md"]), "Jpg"
+siteFunctionList = [
+    download.getImagesLinksMangakakalot,
+    download.getImagesLinksMangakakalot2,
+    download.getImagesLinksLelscan,
+    download.getImagesLinksScan_Op
+]
+mangaList = download.getMangaList(mdFilesList, variables.scansPath, imagesType)  #On récupère le liste des mangas et leurs infos
+mangaNum = download.getMangaNum(mangaList)  #On récupère le numéro du manga à télécharger
+Name, url, scanPath = mangaList[mangaNum]  #Definition de variable après lecture des informations
+
+#Gestion des erreurs de dossier:
+download.creatDir(variables.scansPath + Name)
+download.creatDir(variables.scansPath + Name + "/" + imagesType)
+
+#Traitement des données et lancement des téléchargements:
+for chapitre, more in download.getChapterVars(Name):
+    #Gestion du dossier de chapitre:
+    download.creatDir(scanPath + more + chapitre)
+    HTMLPage = download.getHTMLPage(url + chapitre)
+
+    for functionName in siteFunctionList:   #On parcore les fonction de recherche d'image
+        for imageUrl in functionName(HTMLPage): #On parcoure les images trouvées
+            #Gestion de l'image en local
+            imageName = management.getNamePatternOrder((imageUrl.split("/"))[-1], variables.nomberNomber)
+            imagePath = scanPath + more + chapitre + "/Chap" + chapitre + "_" + imageName  #On crée le chemin de sauvegarde de l'image
+            #Téléchargement
+            download.downloadImage2(imageUrl, imagePath)

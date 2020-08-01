@@ -1,0 +1,37 @@
+#!/bin/python3
+import urllib.request, os, pathlib, mangaManagement.management as management, mangaManagement.variables as variables
+scanPathList = management.readByLineList([variables.binPath + ".mangadown/config/scansPathsList.conf"])
+imagesExtension = "Jpg"
+
+os.system("clear")
+convertTypeList = management.inputConvertTypeList(["Cbz", "Cbr", "Pdf"], "Quel sont les formats de conversion?:")
+
+for convertType in convertTypeList:
+    os.system("clear")
+    mangaList = management.getMangaUnconvertedList(scanPathList, imagesExtension)
+    convertFunction = eval("management.convertTo"+convertType) #On récupère a fonction corespondante
+
+
+    if len(mangaList) > 0:
+        mangaNumList = management.inputMangaNumList(mangaList)
+        
+        # 3-Compréssion des images:
+        for mangaNum in mangaNumList:  # Boucle de compréssion des images
+            mangaName, MangaPath = mangaList[int(mangaNum) - 1]  # Definition des variables après lecture des informations
+            formatPath, chapsMangaPath, mangaName = MangaPath+convertType+"/", MangaPath+imagesExtension+"/", mangaName+"_"
+            management.creatDir(formatPath)
+            unRenameList = ["TOME", "Images", mangaName.upper()]
+            
+            for chapitre in sorted(os.listdir(chapsMangaPath)):
+                if management.containsListWords(chapitre.upper(), unRenameList):  # Si le name dossier est un tome
+                    mangaName = ""
+                
+                os.system("clear")
+                print(management.getWarning("Chapitre {0}".format(chapitre)))
+                management.renameByOrderPatternOne(chapsMangaPath + chapitre + "/", variables.nomberNomber)   #On renome conformément les fichiers
+                convertFunction(chapsMangaPath+chapitre+"/", formatPath+mangaName+chapitre+"."+convertType.lower())
+        management.rmMangasImages(mangaList, mangaNumList)
+    else:
+        print(management.getOkGreen("Il n'y a aucun manga à convertir"))
+# BYMawena
+

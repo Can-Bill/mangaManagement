@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+ 
+[Desktop Entry]
+Version=1.1.1
+Encoding=UTF-8
+Name=DecompressManga
+GenericName=DecompressManga
+Comment=Decomprèse des manga
+Exec=decompressManga
+Icon=/opt/mangaManagement/icons/decompressManga.png
+Terminal=True
+Type=Application
+Categories=Application;Network;
+Name[fr_FR]=DecompressManga

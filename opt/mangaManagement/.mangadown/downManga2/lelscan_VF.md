@@ -1,0 +1,1 @@
+[Dr.Stone] : [https://www.lelscan-vf.com/manga/dr-stone/]

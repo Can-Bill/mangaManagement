@@ -1,0 +1,9 @@
+Package: mangamanagement
+Depends: python3
+Version: 1.1.1
+Architecture: amd64
+Maintainer: Mawena
+Section: web
+Priority: optional
+Installed-Size: 1124
+Description: Decouvrez ces scripts pour le webscraping de manga

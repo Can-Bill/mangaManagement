@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+ 
+[Desktop Entry]
+Version=1.1.1
+Encoding=UTF-8
+Name=ConvertManga
+GenericName=ConvertManga
+Comment=Empacteur de mangas
+Exec=convertManga
+Icon=/opt/mangaManagement/icons/convertManga.png
+Terminal=True
+Type=Application
+Categories=Application;Network;
+Name[fr_FR]=ConvertManga

@@ -1,0 +1,30 @@
+#!/bin/python3
+import urllib.request, os, pathlib, mangaManagement.management as management, mangaManagement.variables as variables
+scanPathList = management.readByLineList([variables.binPath + ".mangadown/config/scansPathsList.conf"])
+imagesExtension = "Jpg"
+
+
+os.system("clear")
+decompressTypeList = management.inputConvertTypeList(["Cbz", "Cbr", "Pdf"], "Quel sont les formats de decompression?:")
+
+for decompressType in decompressTypeList:
+    os.system("clear")
+    mangaList = management.getMangaUnconvertedList(scanPathList, decompressType)
+    decompressFuntion = eval("management.decompress"+decompressType) #On récupère a fonction corespondante
+
+    if len(mangaList) > 0:
+        mangaNumList = management.inputMangaNumList(mangaList)
+        
+        # 3-Compréssion des images:
+        for mangaNum in mangaNumList:  # Boucle de compréssion des images
+            mangaName, MangaPath = mangaList[int(mangaNum) - 1]  # Definition des variables après lecture des informations
+            formatPath, mangaChapsPath = MangaPath+decompressType+"/", MangaPath+imagesExtension+"/"
+            management.creatDir(mangaChapsPath)
+            
+            os.system("clear")
+            for chapitre in sorted(os.listdir(formatPath)):
+                decompressFuntion(formatPath+chapitre, mangaChapsPath, mangaName)
+    else:
+        print(management.getOkGreen("Il n'y a aucun manga à décompresser"))
+# BYMawena
+
